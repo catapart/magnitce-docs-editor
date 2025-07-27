@@ -1,0 +1,48 @@
+<div id="viewer">
+    <nav id="nav">
+        <button class="button" id="new-document-menu" type="button">New Document</button>
+    </nav>
+    <path-router id="router" path="">
+        <route-page id="welcome" path="">
+            <div class="container">
+                <h2 class="header">Docs Editor</h2>
+                <div class="panel">
+                    <div class="description">
+                        <p>Welcome to the Docs Editor!</p>
+                        <p>This web app manages markdown files in a collection that can be exported as application documentation for the web.</p>
+                        <p>To get started, create a new doc using the button below, or in the doc navigation menu.</p>
+                    </div>
+                    <button class="button" id="new-document-welcome" type="button">New Document</button>
+                </div>
+            </div>
+        </route-page>
+        <route-page id="welcome" path="help">
+            <div class="container">
+                <h2 class="header">Help</h2>
+                <div class="panel documents-panel">
+                    <h3 class="header panel-header">Documents</h3>
+                    <div class="description">
+                        <p>Documents are written in <a href="" target="_blank">Markdown</a>.</p>
+                    </div>
+                </div>
+                <div class="panel exporting-panel">
+                    <h3 class="header panel-header">Exporting</h3>
+                    <div class="description">
+                        <p>Documents can be exported as either a single .json file, to be used by the doc-viewer element, or as a .</p>
+                        <ul class="description-list">
+                            <li class="description-item">Single <code>.json</code> file.</li>
+                            <li class="description-item">A package (<code>.zip</code>) of <code>.html</code> and <code>.css</code> files with no javascript.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </route-page>
+        <route-page id="document" path="doc/:id">
+        </route-page>
+    </path-router>
+
+    <template id="nav-item-template">
+        <a class="nav-item"></a>
+    </template>
+</div>
+<pre id="edit-content" contenteditable="true"></pre>

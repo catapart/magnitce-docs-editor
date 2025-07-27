@@ -1,0 +1,164 @@
+:host
+{
+    /*** gray ***/
+    --uchu-light-gray-raw: 95.57% 0.003 286.35;
+    --uchu-light-gray: oklch(var(--uchu-light-gray-raw));
+
+    --uchu-gray-raw: 84.68% 0.002 197.12;
+    --uchu-gray: oklch(var(--uchu-gray-raw));
+
+    --uchu-dark-gray-raw: 63.12% 0.004 219.55;
+    --uchu-dark-gray: oklch(var(--uchu-dark-gray-raw));
+
+    /*** red ***/
+    --uchu-light-red-raw: 88.98% 0.052 3.28;
+    --uchu-light-red: oklch(var(--uchu-light-red-raw));
+
+    --uchu-dark-red-raw: 45.8% 0.177 17.7;
+    --uchu-dark-red: oklch(var(--uchu-dark-red-raw));
+
+    /*** purple ***/
+    --uchu-light-purple-raw: 89.1% 0.046 305.24;
+    --uchu-light-purple: oklch(var(--uchu-light-purple-raw));
+
+    --uchu-dark-purple-raw: 39.46% 0.164 298.29;
+    --uchu-dark-purple: oklch(var(--uchu-dark-purple-raw));
+
+    /*** blue ***/
+    --uchu-light-blue-raw: 89.66% 0.046 260.67;
+    --uchu-light-blue: oklch(var(--uchu-light-blue-raw));
+
+    --uchu-blue-raw: 62.39% 0.181 258.33;
+    --uchu-blue: oklch(var(--uchu-blue-raw));
+
+    --uchu-dark-blue-raw: 43.48% 0.17 260.2;
+    --uchu-dark-blue: oklch(var(--uchu-dark-blue-raw));
+
+    /*** green ***/
+    --uchu-light-green-raw: 93.96% 0.05 148.74;
+    --uchu-light-green: oklch(var(--uchu-light-green-raw));
+
+    --uchu-green-raw: 79.33% 0.179 145.62;
+    --uchu-green: oklch(var(--uchu-green-raw));
+
+    --uchu-dark-green-raw: 58.83% 0.158 145.05;
+    --uchu-dark-green: oklch(var(--uchu-dark-green-raw));
+
+    /*** general ***/
+    --uchu-yang-raw: 99.4% 0 0;
+    --uchu-yang: oklch(var(--uchu-yang-raw));
+
+    --uchu-yin-raw: 14.38% 0.007 256.88;
+    --uchu-yin: oklch(var(--uchu-yin-raw));
+
+    /*** code-tests vars ***/
+
+    --spacer: calc(1em - 7px);
+    --small-spacer: calc(var(--spacer) / 2);
+
+    --color-success: var(--uchu-green);
+    --color-fail: var(--uchu-red);
+    --color-process: var(--uchu-blue);
+
+    --text-surface: var(--uchu-yin);
+    --text-result: var(--uchu-yang); /* --uchu-yang: #fdfdfd; */
+    --text-collapse-icon: var(--uchu-dark-gray);  /* --uchu-dark-gray: #878a8b; */
+    --text-hook-summary: var(--uchu-dark-purple);
+    --text-success: var(--uchu-dark-green); /* --uchu-dark-green: #2e943a; */
+    --text-fail: var(--uchu-dark-red); /* --uchu-dark-red: #a30d30; */
+    --text-process: var(--uchu-dark-blue); /* --uchu-dark-blue: #0949ac; */
+    --text-button: var(--uchu-yang); /* --uchu-dark-blue: #0949ac; */
+    --text-placeholder: var(--uchu-dark-gray);
+
+    --surface-0: var(--uchu-light-gray);
+    --surface-test: var(--uchu-yang);
+    --surface-test-summary: var(--uchu-gray);
+    --surface-hook-summary: var(--uchu-light-purple);
+    --surface-success: var(--uchu-light-green);
+    --surface-fail: var(--uchu-light-red);
+    --surface-process: var(--uchu-light-blue);
+    --surface-button: var(--uchu-blue); /* --uchu-blue: #3984f2 */
+    --surface-button-hover: var(--uchu-light-blue);
+    --surface-button-active: var(--uchu-dark-blue);
+
+    --border-test: solid 1px var(--uchu-dark-gray);
+    --border-hook: solid 1px var(--uchu-dark-purple);
+    --border-success: solid 1px var(--uchu-dark-green);
+    --border-fail: solid 1px var(--uchu-dark-red);
+    --border-process: solid 1px var(--uchu-dark-blue);
+    --border-button: solid 1px var(--uchu-blue);
+
+    --info-icon: url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2022.812714%2022.814663%22%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20style%3D%22fill%3Atransparent%3Bstroke%3Atransparent%3Bstroke-width%3A0.999999%3Bstroke-linejoin%3Around%3Bstroke-miterlimit%3A6.3%3Bstroke-dasharray%3Anone%3Bstroke-dashoffset%3A29.2913%3Bstroke-opacity%3A1%22%20d%3D%22M%2022.295505%2C11.407332%20A%2010.889144%2C10.889144%200%200%201%2011.406424%2C22.296479%2010.889144%2C10.889144%200%200%201%200.51720881%2C11.407332%2010.889144%2C10.889144%200%200%201%2011.406424%2C0.51818382%2010.889144%2C10.889144%200%200%201%2022.295505%2C11.407332%20Z%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22m%2013.945668%2C4.3053761%20c%200.150778%2C-0.96462%20-0.30687%2C-1.43709%20-1.36997%2C-1.43709%20-1.063%2C0%20-1.668452%2C0.47247%20-1.81923%2C1.43709%20-0.150779%2C0.96462%200.306971%2C1.43708%201.369971%2C1.43708%201.004%2C0%201.66845%2C-0.47246%201.819229%2C-1.43708%20z%20M%2011.693889%2C17.829726%2013.373994%2C7.0811161%20h%20-2.9333%20L%208.7605887%2C17.829726%20Z%22%20style%3D%22font-size%3A19.6861px%3Bfont-family%3APassageway%3B-inkscape-font-specification%3APassageway%3Bfill%3A%23a30d30%3Bstroke-width%3A2.5%3Bstroke-linejoin%3Around%3Bstroke-miterlimit%3A6.3%3Bstroke-dashoffset%3A29.2913%22%20aria-label%3D%22i%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E');
+
+    --font-text: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+    /*** styles ***/
+
+    color-scheme: light dark;
+    display: grid;
+    gap: var(--spacer);
+    background-color: var(--surface-0);
+    color: var(--text-surface); 
+    padding: var(--small-spacer);
+    font-family: var(--font-text);
+}
+@media (prefers-color-scheme: dark) 
+{
+    :host
+    {
+        --text-surface: var(--uchu-yang);
+        --text-result: var(--uchu-yang);
+
+        --surface-0: var(--uchu-yin);
+        --surface-test: oklch(25.11% 0.006 258.36);
+        --surface-test-summary: oklch(35.02% 0.005 236.66);
+
+        /* user-agent input defaults */
+        --input-border-color: rgb(133, 133, 133);
+    }
+}
+#edit-content
+{
+    /* user-agent input defaults */
+    --input-border-color: rgb(118, 118, 118);
+
+    min-height: 1.2em;
+    height: 75px;
+    min-width: 24px;
+    resize: both;
+    background-color: field;
+    color: fieldtext;
+    border: solid 1px var(--input-border-color, fieldtext);
+    padding: 3px 15px 3px 5px;
+    font-size: 12px;
+    font-family: sans-serif;
+    display: none;
+    border-radius: 2px;
+    overflow: auto;
+    overflow-wrap: normal;
+}
+:host([target]) #edit-content
+{
+    display: block;
+}
+
+/* only mobile */
+@media (max-width: 665px) 
+{
+    :host
+    {
+    }
+}
+/* only desktop */
+@media (min-width: 665px) 
+{
+
+}
+
+
+
+@keyframes spin
+{
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

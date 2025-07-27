@@ -1,0 +1,46 @@
+{
+  "name": "@magnit-ce/docs-editor",
+  "version": "0.0.0",
+  "description": "A custom HTMLElement that manages markdown files in a collection that can be exported as application documentation for the web. ",
+  "type": "module",
+  "main": "dist/docs-editor.js",
+  "module": "dist/docs-editor.mjs",
+  "types": "dist/docs-editor.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/docs-editor.ts --format cjs,esm --dts --clean",
+    "minify": "tsup src/docs-editor.ts --format esm --config ./tsup.config.min.ts --outDir ./dist --minify",
+    "copyToDemo": "node -e \"const fs = require('fs'); fs.cpSync('dist', 'demo/dist', {recursive: true});\"",
+    "lint": "tsup src/docs-editor.ts --format esm --tsconfig ./tsconfig.lint.json",
+    "package": "npm run build && npm run minify && npm run copyToDemo",
+    "release": "npm run package && changeset publish"
+  },
+  "keywords": [
+    "custom",
+    "element",
+    "html",
+    "browser",
+    "esm"
+  ],
+  "author": "catapart",
+  "license": "CC0-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/catapart/magnitce-docs-editor"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.7",
+    "changesets": "^1.0.2",
+    "minify": "^11.4.0",
+    "terser": "^5.31.3",
+    "tsup": "^8.2.0",
+    "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "@magnit-ce/path-router": "^0.2.8",
+    "ce-part-utils": "^0.0.0",
+    "marked": "^16.1.1"
+  }
+}
