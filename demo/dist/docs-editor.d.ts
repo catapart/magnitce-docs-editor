@@ -20,9 +20,13 @@ declare class DocsEditorElement extends HTMLElement {
     currentDocument?: MarkdownDocument;
     openDocument(document: MarkdownDocument): Promise<void>;
     updateDocument(document: MarkdownDocument): Promise<void>;
-    closeDocument(): void;
-    saveDocument(document: MarkdownDocument): void;
+    closeDocument(): Promise<void>;
+    getDocument(id: string): Promise<MarkdownDocument | null>;
+    saveDocument(document: MarkdownDocument): Promise<void>;
     updateDocumentsMenu(): Promise<void>;
+    toggleMarkdownGuide(): void;
+    openMarkdownGuide(): void;
+    closeMarkdownGuide(): void;
     startTimeout(): void;
     pauseTimeout(): void;
     resumeTimeout(): void;

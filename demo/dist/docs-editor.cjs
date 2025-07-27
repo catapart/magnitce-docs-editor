@@ -125,6 +125,8 @@ var docs_editor_default = `:host\r
     color-scheme: light dark;\r
     display: grid;\r
     gap: var(--spacer);\r
+\r
+\r
     background-color: var(--surface-0);\r
     color: var(--text-surface); \r
     padding: var(--small-spacer);\r
@@ -145,29 +147,190 @@ var docs_editor_default = `:host\r
         --input-border-color: rgb(133, 133, 133);\r
     }\r
 }\r
-#edit-content\r
+\r
+.field\r
+{\r
+    display: grid;\r
+    grid-template-rows: auto 1fr;\r
+    gap: var(--small-spacer);\r
+    overflow: hidden;\r
+}\r
+\r
+path-router\r
+{\r
+    overflow: hidden;\r
+}\r
+\r
+route-page\r
+{\r
+    overflow: auto;\r
+}\r
+\r
+#viewer\r
+{\r
+    overflow: hidden;\r
+    display: grid;\r
+    gap: var(--spacer);\r
+    grid-template-columns: 250px 1fr;\r
+    grid-template-rows: 1fr 0px;\r
+    transition: grid-template-columns 200ms ease-out, grid-template-rows 200ms ease-out;\r
+}\r
+:host([target]) #viewer\r
+{\r
+    height: auto;\r
+    grid-template-rows: 1fr 300px;\r
+}\r
+\r
+#menu\r
+{\r
+    grid-row: span 2;\r
+\r
+    display: flex;\r
+    flex-direction: column;\r
+    gap: var(--spacer);\r
+\r
+    padding: 0;\r
+    margin: 0;\r
+}\r
+\r
+#menu-header\r
+{\r
+    display: grid;\r
+    align-items: center;\r
+    justify-content: center;\r
+    text-align: center;\r
+}\r
+#header-links\r
+{\r
+    display: grid;\r
+    grid-template-columns: 1fr 1fr;\r
+    gap: var(--spacer);\r
+}\r
+.header-link\r
+{\r
+    text-align: center;\r
+    padding: 5px 14px;\r
+    background-color: var(--surface-test);\r
+    border-radius: 30px;\r
+    font-size: 12px;\r
+    font-weight: bold;\r
+}\r
+\r
+#nav\r
+{\r
+    display: flex;\r
+    flex-direction: column;\r
+    gap: var(--spacer);\r
+    overflow: auto;\r
+}\r
+\r
+#nav:empty::before\r
+{\r
+    content: '[No Documents Available]';\r
+    color: var(--text-placeholder);\r
+}\r
+\r
+#menu-footer\r
+{\r
+    font-size: 12px;\r
+    display: flex;\r
+    gap: var(--spacer);\r
+}\r
+\r
+#composer\r
+{\r
+    overflow: hidden;\r
+    height: 0;\r
+    padding: 0;\r
+    \r
+    display: grid;\r
+    column-gap: 0;\r
+    row-gap: var(--spacer);\r
+    grid-template-columns: 1fr 0px;\r
+    grid-template-rows: auto 1fr;\r
+    transition: grid-template-columns 200ms ease-out, grid-template-rows 200ms ease-out;\r
+}\r
+:host([target]) #composer\r
+{\r
+    height: auto;\r
+    padding: var(--small-spacer);\r
+}\r
+:host([markdown-guide]) #composer\r
+{\r
+    height: auto;\r
+    grid-template-columns: 1fr 300px;\r
+    column-gap: var(--spacer);\r
+}\r
+\r
+#composer-menu\r
+{\r
+    grid-column: span 2;\r
+    display: grid;\r
+    grid-template-columns: auto 1fr auto;\r
+    gap: var(--small-spacer);\r
+}\r
+\r
+#features\r
+{\r
+    display: flex;\r
+    align-items: flex-end;\r
+}\r
+\r
+#document-title-field\r
+{\r
+    display: grid;\r
+    align-items: flex-end;\r
+    justify-content: center;\r
+}\r
+\r
+#data\r
+{\r
+    display: flex;\r
+    align-items: flex-end;\r
+    gap: var(--small-spacer);\r
+}\r
+\r
+/* #editable-wrapper\r
+{\r
+    display: inline-block;\r
+} */\r
+\r
+#document-content\r
 {\r
     /* user-agent input defaults */\r
     --input-border-color: rgb(118, 118, 118);\r
 \r
+    border-radius: 2px;\r
     min-height: 1.2em;\r
-    height: 75px;\r
     min-width: 24px;\r
-    resize: both;\r
-    background-color: field;\r
+    font-size: 12px;\r
+    font-family: inherit;\r
+\r
+    /* background-color: field;\r
     color: fieldtext;\r
     border: solid 1px var(--input-border-color, fieldtext);\r
     padding: 3px 15px 3px 5px;\r
     font-size: 12px;\r
     font-family: sans-serif;\r
-    display: none;\r
-    border-radius: 2px;\r
+    display: inline-block;\r
     overflow: auto;\r
     overflow-wrap: normal;\r
+    margin: 0; */\r
 }\r
-:host([target]) #edit-content\r
+\r
+#markdown-guide\r
 {\r
-    display: block;\r
+    padding: 0;\r
+    width: 0;\r
+\r
+    grid-row: span 2;\r
+    overflow: hidden;\r
+}\r
+\r
+:host([markdown-guide]) #markdown-guide\r
+{\r
+    padding: var(--small-spacer);\r
+    width: auto;\r
 }\r
 \r
 /* only mobile */\r
@@ -192,7 +355,105 @@ var docs_editor_default = `:host\r
 }`;
 
 // src/docs-editor.html?raw
-var docs_editor_default2 = '<div id="viewer">\r\n    <nav id="nav">\r\n        <button class="button" id="new-document-menu" type="button">New Document</button>\r\n    </nav>\r\n    <path-router id="router" path="">\r\n        <route-page id="welcome" path="">\r\n            <div class="container">\r\n                <h2 class="header">Docs Editor</h2>\r\n                <div class="panel">\r\n                    <div class="description">\r\n                        <p>Welcome to the Docs Editor!</p>\r\n                        <p>This web app manages markdown files in a collection that can be exported as application documentation for the web.</p>\r\n                        <p>To get started, create a new doc using the button below, or in the doc navigation menu.</p>\r\n                    </div>\r\n                    <button class="button" id="new-document-welcome" type="button">New Document</button>\r\n                </div>\r\n            </div>\r\n        </route-page>\r\n        <route-page id="welcome" path="help">\r\n            <div class="container">\r\n                <h2 class="header">Help</h2>\r\n                <div class="panel documents-panel">\r\n                    <h3 class="header panel-header">Documents</h3>\r\n                    <div class="description">\r\n                        <p>Documents are written in <a href="" target="_blank">Markdown</a>.</p>\r\n                    </div>\r\n                </div>\r\n                <div class="panel exporting-panel">\r\n                    <h3 class="header panel-header">Exporting</h3>\r\n                    <div class="description">\r\n                        <p>Documents can be exported as either a single .json file, to be used by the doc-viewer element, or as a .</p>\r\n                        <ul class="description-list">\r\n                            <li class="description-item">Single <code>.json</code> file.</li>\r\n                            <li class="description-item">A package (<code>.zip</code>) of <code>.html</code> and <code>.css</code> files with no javascript.</li>\r\n                        </ul>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </route-page>\r\n        <route-page id="document" path="doc/:id">\r\n        </route-page>\r\n    </path-router>\r\n\r\n    <template id="nav-item-template">\r\n        <a class="nav-item"></a>\r\n    </template>\r\n</div>\r\n<pre id="edit-content" contenteditable="true"></pre>';
+var docs_editor_default2 = `<div id="viewer">\r
+    <menu id="menu">\r
+        <header id="menu-header" class="header">\r
+            <h4>Documentation</h4>\r
+            <div id="header-links">\r
+                <a class="header-link" part="header-link" data-route="">\r
+                    <span class="icon"></span>\r
+                    <span class="label">Welcome</span>\r
+                </a>\r
+                <a class="header-link" part="header-link" data-route="help">\r
+                    <span class="icon"></span>\r
+                    <span class="label">Help</span>\r
+                </a>\r
+            </div>\r
+        </header>\r
+        <nav id="nav"></nav>\r
+        <button class="button" id="new-document-menu" type="button">New Document</button>\r
+    </menu>\r
+    <path-router id="router" path="">\r
+        <route-page id="welcome" path="">\r
+            <div class="container">\r
+                <h2 class="header">Docs Editor</h2>\r
+                <div class="panel">\r
+                    <div class="description">\r
+                        <p>Welcome to the Docs Editor!</p>\r
+                        <p>This web app manages markdown files in a collection that can be exported as application documentation for the web.</p>\r
+                        <p>To get started, create a new doc using the button below, or in the doc navigation menu.</p>\r
+                    </div>\r
+                    <button class="button" id="new-document-welcome" type="button">New Document</button>\r
+                </div>\r
+            </div>\r
+        </route-page>\r
+        <route-page id="help" path="help">\r
+            <div class="container">\r
+                <h2 class="header">Help</h2>\r
+                <div class="panel documents-panel">\r
+                    <h3 class="header panel-header">Documents</h3>\r
+                    <div class="description">\r
+                        <p>Documents are written in <a href="" target="_blank">Markdown</a>.</p>\r
+                    </div>\r
+                </div>\r
+                <div class="panel exporting-panel">\r
+                    <h3 class="header panel-header">Exporting</h3>\r
+                    <div class="description">\r
+                        <p>Documents can be exported as either a single .json file, to be used by the doc-viewer element, or as a .</p>\r
+                        <ul class="description-list">\r
+                            <li class="description-item">Single <code>.json</code> file.</li>\r
+                            <li class="description-item">A package (<code>.zip</code>) of <code>.html</code> and <code>.css</code> files with no javascript.</li>\r
+                        </ul>\r
+                    </div>\r
+                </div>\r
+            </div>\r
+        </route-page>\r
+        <route-page id="document" path="doc/:id">\r
+        </route-page>\r
+    </path-router>\r
+    <div id="composer">\r
+        <div id="composer-menu">\r
+            <div id="features">\r
+                <button id="markdown-guide-button" class="button" type="button">Markdown Guide</button>\r
+            </div>\r
+            <label id="document-title-field" class="label field">\r
+                <span id="document-title-label" class="label field-label">Document Title</span>\r
+                <input id="document-title" class="input text" type="text" />\r
+            </label>\r
+            <div id="data">\r
+                <div id="export-type-description"></div>\r
+                <label id="export-toggle-field"\r
+                class="label field"\r
+                data-true="Export using the Save-As feature to select where, on your device, you would like to export the docs to. (if available)"\r
+                data-false="Use the browser's default download feature to export the docs.">\r
+                    <span id="export-toggle-label" class="label field-label">Save As?</span>\r
+                    <input id="export-toggle" class="input checkbox toggle" type="checkbox" />\r
+                </label>\r
+                <label id="export-type-field" class="label field">\r
+                    <span id="export-type-label" class="label field-label">Export Type</span>\r
+                    <select id="export-type" class="input select">\r
+                    </select>\r
+                </label>\r
+                <button id="export-button" class="button" type="button">Export</button>\r
+            </div>\r
+        </div>\r
+        <label id="document-content-field" class="label field">\r
+            <span id="document-content-label" class="label field-label">Document Content</span>\r
+            <textarea id="document-content" class="input text"></textarea>\r
+        </label>\r
+        <div id="markdown-guide">\r
+            <h1 class="header">Markdown Guide</h1>\r
+\r
+        </div>\r
+    </div>\r
+    <template id="nav-item-template">\r
+        <a class="nav-item" part="nav-item">\r
+            <span class="positioners"></span>\r
+            <span class="icon"></span>\r
+            <span class="label"></span>\r
+        </a>\r
+    </template>\r
+</div>`;
 
 // node_modules/.pnpm/ce-part-utils@0.0.0/node_modules/ce-part-utils/dist/ce-part-utils.js
 var DEFAULT_ELEMENT_SELECTOR = ":not(slot,defs,g,rect,path,circle,ellipse,line,polygon,text,tspan,use,svg image,svg title,desc,template,template *)";
@@ -2419,6 +2680,7 @@ var DocsEditorEvent = /* @__PURE__ */ ((DocsEditorEvent2) => {
   DocsEditorEvent2["SaveTimeoutComplete"] = "savetimeoutcomplete";
   return DocsEditorEvent2;
 })(DocsEditorEvent || {});
+var LAST_OPENED_PAGE_KEY = "last-opened-id";
 var DEFAULT_DURATION_MILLISECONDS = 1e3;
 var COMPONENT_STYLESHEET2 = new CSSStyleSheet();
 COMPONENT_STYLESHEET2.replaceSync(docs_editor_default);
@@ -2439,18 +2701,6 @@ var DocsEditorElement = class extends HTMLElement {
     this.#cache = new Cache(this.#datastore, "documents");
     const customTemplate_navItem = this.querySelector('template[slot="nav-item"]');
     this.#navItemTemplateContent = customTemplate_navItem != null ? customTemplate_navItem.content : this.findElement("nav-item-template").content;
-    const welcomeItem = this.#navItemTemplateContent.cloneNode(true).querySelector(".nav-item");
-    if (welcomeItem != null) {
-      welcomeItem.textContent = "Welcome";
-      welcomeItem.setAttribute("data-route", "");
-      this.findElement("nav").append(welcomeItem);
-    }
-    const helpItem = this.#navItemTemplateContent.cloneNode(true).querySelector(".nav-item");
-    if (helpItem != null) {
-      helpItem.textContent = "Help";
-      helpItem.setAttribute("data-route", "help");
-      this.findElement("nav").append(helpItem);
-    }
   }
   #isInitialized = false;
   async #init() {
@@ -2462,13 +2712,31 @@ var DocsEditorElement = class extends HTMLElement {
       version: 1
     });
     this.updateDocumentsMenu();
-    this.findElement("router").addRouteLinkClickHandlers(this.findElement("nav"));
+    const router = this.findElement("router");
+    const lastOpenedPage = await this.#cache.getValue(LAST_OPENED_PAGE_KEY);
+    if (lastOpenedPage != null) {
+      router.navigate(lastOpenedPage);
+    }
+    router.addRouteLinkClickHandlers(this.findElement("menu"));
     this.#isInitialized = true;
   }
   connectedCallback() {
     this.addEventListener("click", this.#boundClickHandler);
     this.findElement("router").addEventListener("change", this.#boundPathChangeHandler);
-    this.findElement("edit-content").addEventListener("keyup", this.#boundKeyUpHandler);
+    this.findElement("document-content").addEventListener("keyup", this.#boundKeyUpHandler);
+    this.findElement("document-title").addEventListener("keyup", async (event) => {
+      if (this.currentDocument == null) {
+        return;
+      }
+      const input = event.currentTarget;
+      this.currentDocument.navigationItemLabel = input.value;
+      await this.saveDocument(this.currentDocument);
+      const navigationItem = this.shadowRoot.querySelector(`[data-route="doc/${this.currentDocument.id}"]`);
+      if (navigationItem == null) {
+        return;
+      }
+      navigationItem.textContent = this.currentDocument.navigationItemLabel;
+    });
     assignClassAndIdToPart(this.shadowRoot);
     this.#init();
   }
@@ -2484,37 +2752,79 @@ var DocsEditorElement = class extends HTMLElement {
   currentDocument;
   async openDocument(document2) {
     console.log("document");
+    await this.closeDocument();
     await this.updateDocument(document2);
-    this.findElement("edit-content").textContent = document2.content;
+    this.findElement("document-content").value = document2.content;
+    this.findElement("document-title").value = document2.navigationItemLabel;
     this.currentDocument = document2;
     this.setAttribute("target", document2.id);
+    this.part.add("target");
+    this.#cache.setValue(LAST_OPENED_PAGE_KEY, `doc/${document2.id}`);
   }
   async updateDocument(document2) {
     this.findElement("document").innerHTML = await d.parse(document2.content);
-    this.findElement("document").append(document2.navigationItemLabel);
   }
-  closeDocument() {
-    this.removeAttribute("target");
-    this.currentDocument = void 0;
-  }
-  saveDocument(document2) {
-    const documentRecord = JSON.stringify(document2);
-    console.log(documentRecord);
-    this.#cache.setValue(document2.id, documentRecord);
-  }
-  async updateDocumentsMenu() {
-    const navigationItem = this.#navItemTemplateContent.cloneNode(true).querySelector("*");
-    if (navigationItem == null) {
+  async closeDocument() {
+    if (this.currentDocument == null) {
       return;
     }
+    await this.saveDocument(this.currentDocument);
+    this.findElement("document-title").value = "";
+    this.findElement("document-content").value = "";
+    this.removeAttribute("target");
+    this.part.remove("target");
+    this.currentDocument = void 0;
+  }
+  async getDocument(id) {
+    const documentRecord = await this.#cache.getValue(id);
+    if (documentRecord == null) {
+      return null;
+    }
+    const document2 = JSON.parse(documentRecord);
+    return document2;
+  }
+  async saveDocument(document2) {
+    const documentRecord = JSON.stringify(document2);
+    console.log(documentRecord);
+    await this.#cache.setValue(document2.id, documentRecord);
+  }
+  async updateDocumentsMenu() {
+    const navigationItemDescription = this.#navItemTemplateContent.cloneNode(true).querySelector("*");
+    if (navigationItemDescription == null) {
+      return;
+    }
+    const nav = this.findElement("nav");
+    nav.innerHTML = "";
     const values = (await this.#cache.getAllValues()).filter((item) => item != null);
     for (let i = 0; i < values.length; i++) {
-      console.log(values[i]);
-      const document2 = JSON.parse(values[i]);
-      navigationItem.textContent = document2.navigationItemLabel;
-      navigationItem.setAttribute("data-route", `doc/${document2.id}`);
-      this.findElement("nav").append(navigationItem);
+      if (!values[i].startsWith("{")) {
+        continue;
+      }
+      const navigationItem = navigationItemDescription.cloneNode(true);
+      try {
+        const document2 = JSON.parse(values[i]);
+        navigationItem.textContent = document2.navigationItemLabel;
+        navigationItem.setAttribute("data-route", `doc/${document2.id}`);
+        nav.append(navigationItem);
+      } catch (exception) {
+        console.error(exception);
+      }
     }
+  }
+  toggleMarkdownGuide() {
+    if (this.getAttribute("markdown-guide") == null) {
+      this.openMarkdownGuide();
+    } else {
+      this.closeMarkdownGuide();
+    }
+  }
+  openMarkdownGuide() {
+    this.toggleAttribute("markdown-guide", true);
+    this.part.add("markdown-guide");
+  }
+  closeMarkdownGuide() {
+    this.toggleAttribute("markdown-guide", false);
+    this.part.remove("markdown-guide");
   }
   #boundClickHandler = this.#onClick.bind(this);
   #onClick(event) {
@@ -2525,18 +2835,39 @@ var DocsEditorElement = class extends HTMLElement {
       this.openNewDocument();
       return;
     }
+    const markdownGuideButton = composedPath.find((item) => item instanceof HTMLButtonElement && item.id == "markdown-guide-button");
+    if (markdownGuideButton != null) {
+      this.toggleMarkdownGuide();
+      return;
+    }
+    const exportButton = composedPath.find((item) => item instanceof HTMLButtonElement && item.id == "export-button");
+    if (exportButton != null) {
+      console.log("export");
+      return;
+    }
   }
   #boundPathChangeHandler = this.#onPathChange.bind(this);
   async #onPathChange(event) {
+    const customEvent = event;
+    if (customEvent.detail.route == this.findElement("welcome")) {
+      if (this.#isInitialized == true) {
+        await this.closeDocument();
+        this.#cache.setValue(LAST_OPENED_PAGE_KEY, "");
+      }
+      return;
+    } else if (customEvent.detail.route == this.findElement("help")) {
+      await this.closeDocument();
+      this.#cache.setValue(LAST_OPENED_PAGE_KEY, "help");
+      return;
+    }
     const documentId = event.target?.getAttribute("path")?.substring(4);
     if (documentId == null || event.detail.route != this.findElement("document")) {
       return;
     }
-    const documentRecord = await this.#cache.getValue(documentId);
-    if (documentRecord == null) {
+    const document2 = await this.getDocument(documentId);
+    if (document2 == null) {
       return;
     }
-    const document2 = JSON.parse(documentRecord);
     await this.openDocument(document2);
   }
   #boundKeyUpHandler = this.#onKeyUp.bind(this);
@@ -2544,8 +2875,7 @@ var DocsEditorElement = class extends HTMLElement {
     if (this.currentDocument == null) {
       return;
     }
-    this.currentDocument.content = this.findElement("edit-content").textContent ?? "";
-    console.log(this.currentDocument.content);
+    this.currentDocument.content = this.findElement("document-content").value ?? "";
     this.endTimeout();
     requestAnimationFrame(() => {
       this.startTimeout();

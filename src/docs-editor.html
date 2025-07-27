@@ -1,7 +1,21 @@
 <div id="viewer">
-    <nav id="nav">
+    <menu id="menu">
+        <header id="menu-header" class="header">
+            <h4>Documentation</h4>
+            <div id="header-links">
+                <a class="header-link" part="header-link" data-route="">
+                    <span class="icon"></span>
+                    <span class="label">Welcome</span>
+                </a>
+                <a class="header-link" part="header-link" data-route="help">
+                    <span class="icon"></span>
+                    <span class="label">Help</span>
+                </a>
+            </div>
+        </header>
+        <nav id="nav"></nav>
         <button class="button" id="new-document-menu" type="button">New Document</button>
-    </nav>
+    </menu>
     <path-router id="router" path="">
         <route-page id="welcome" path="">
             <div class="container">
@@ -16,7 +30,7 @@
                 </div>
             </div>
         </route-page>
-        <route-page id="welcome" path="help">
+        <route-page id="help" path="help">
             <div class="container">
                 <h2 class="header">Help</h2>
                 <div class="panel documents-panel">
@@ -40,9 +54,46 @@
         <route-page id="document" path="doc/:id">
         </route-page>
     </path-router>
+    <div id="composer">
+        <div id="composer-menu">
+            <div id="features">
+                <button id="markdown-guide-button" class="button" type="button">Markdown Guide</button>
+            </div>
+            <label id="document-title-field" class="label field">
+                <span id="document-title-label" class="label field-label">Document Title</span>
+                <input id="document-title" class="input text" type="text" />
+            </label>
+            <div id="data">
+                <div id="export-type-description"></div>
+                <label id="export-toggle-field"
+                class="label field"
+                data-true="Export using the Save-As feature to select where, on your device, you would like to export the docs to. (if available)"
+                data-false="Use the browser's default download feature to export the docs.">
+                    <span id="export-toggle-label" class="label field-label">Save As?</span>
+                    <input id="export-toggle" class="input checkbox toggle" type="checkbox" />
+                </label>
+                <label id="export-type-field" class="label field">
+                    <span id="export-type-label" class="label field-label">Export Type</span>
+                    <select id="export-type" class="input select">
+                    </select>
+                </label>
+                <button id="export-button" class="button" type="button">Export</button>
+            </div>
+        </div>
+        <label id="document-content-field" class="label field">
+            <span id="document-content-label" class="label field-label">Document Content</span>
+            <textarea id="document-content" class="input text"></textarea>
+        </label>
+        <div id="markdown-guide">
+            <h1 class="header">Markdown Guide</h1>
 
+        </div>
+    </div>
     <template id="nav-item-template">
-        <a class="nav-item"></a>
+        <a class="nav-item" part="nav-item">
+            <span class="positioners"></span>
+            <span class="icon"></span>
+            <span class="label"></span>
+        </a>
     </template>
 </div>
-<pre id="edit-content" contenteditable="true"></pre>

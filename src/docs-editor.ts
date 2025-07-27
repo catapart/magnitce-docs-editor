@@ -17,6 +17,7 @@ export enum DocsEditorEvent
     SaveTimeoutComplete = 'savetimeoutcomplete',
 }
 
+const LAST_OPENED_PAGE_KEY = 'last-opened-id';
 const DEFAULT_DURATION_MILLISECONDS = 1000;
 
 const COMPONENT_STYLESHEET = new CSSStyleSheet();
@@ -46,21 +47,6 @@ export class DocsEditorElement extends HTMLElement
         this.#navItemTemplateContent = customTemplate_navItem != null
         ? customTemplate_navItem.content
         : this.findElement<HTMLTemplateElement>('nav-item-template').content;
-
-        const welcomeItem = (this.#navItemTemplateContent.cloneNode(true) as HTMLElement).querySelector('.nav-item');
-        if(welcomeItem != null)
-        {
-            welcomeItem.textContent = 'Welcome';
-            welcomeItem.setAttribute('data-route', '');
-            this.findElement('nav').append(welcomeItem);
-        }
-        const helpItem = (this.#navItemTemplateContent.cloneNode(true) as HTMLElement).querySelector('.nav-item');
-        if(helpItem != null)
-        {
-            helpItem.textContent = 'Help';
-            helpItem.setAttribute('data-route', 'help');
-            this.findElement('nav').append(helpItem);
-        }
     }
 
     #isInitialized: boolean = false;
@@ -75,7 +61,15 @@ export class DocsEditorElement extends HTMLElement
 
         this.updateDocumentsMenu();
 
-        this.findElement<PathRouterElement>('router')!.addRouteLinkClickHandlers(this.findElement('nav'));
+        const router = this.findElement<PathRouterElement>('router');
+
+        const lastOpenedPage = await this.#cache.getValue<string>(LAST_OPENED_PAGE_KEY);
+        if(lastOpenedPage != null)
+        {
+            router.navigate(lastOpenedPage)
+        }
+
+        router.addRouteLinkClickHandlers(this.findElement('menu'));
 
         this.#isInitialized = true;
     }
@@ -84,7 +78,18 @@ export class DocsEditorElement extends HTMLElement
     {
         this.addEventListener('click', this.#boundClickHandler);
         this.findElement<PathRouterElement>('router').addEventListener('change', this.#boundPathChangeHandler);
-        this.findElement('edit-content').addEventListener('keyup', this.#boundKeyUpHandler);
+        this.findElement('document-content').addEventListener('keyup', this.#boundKeyUpHandler);
+        this.findElement('document-title').addEventListener('keyup', async (event) =>
+        {
+            if(this.currentDocument == null) { return; }
+            const input = event.currentTarget as HTMLInputElement;
+            this.currentDocument.navigationItemLabel = input.value;
+            await this.saveDocument(this.currentDocument);
+            const navigationItem = this.shadowRoot!.querySelector(`[data-route="doc/${this.currentDocument.id}"]`);
+            if(navigationItem == null) { return; }
+            navigationItem.textContent = this.currentDocument.navigationItemLabel;
+            
+        });
         assignClassAndIdToPart(this.shadowRoot!);
 
         this.#init();
@@ -106,45 +111,95 @@ export class DocsEditorElement extends HTMLElement
     async openDocument(document: MarkdownDocument)
     {
         console.log('document');
+        await this.closeDocument();
         await this.updateDocument(document);
-        this.findElement('edit-content').textContent = document.content;
+        this.findElement<HTMLTextAreaElement>('document-content').value = document.content;
+        this.findElement<HTMLInputElement>('document-title').value = document.navigationItemLabel;
         this.currentDocument = document;
         this.setAttribute('target', document.id);
+        this.part.add('target');
+        this.#cache.setValue(LAST_OPENED_PAGE_KEY, `doc/${document.id}`);
     }
     async updateDocument(document: MarkdownDocument)
     {
         this.findElement<HTMLElement>('document').innerHTML = await marked.parse(document.content);
-        this.findElement<HTMLElement>('document').append(document.navigationItemLabel);
     }
-    closeDocument()
+    async closeDocument()
     {
+        if(this.currentDocument == null) { return; }
+
+        await this.saveDocument(this.currentDocument);
+        this.findElement<HTMLInputElement>('document-title').value = "";
+        this.findElement<HTMLTextAreaElement>('document-content').value = "";
         this.removeAttribute('target');
+        this.part.remove('target');
         this.currentDocument = undefined;
     }
 
-    saveDocument(document: MarkdownDocument)
+    async getDocument(id: string)
+    {
+        const documentRecord = await this.#cache.getValue<string>(id);
+        if(documentRecord == null) { return null; }
+        const document = JSON.parse(documentRecord);
+        return document as MarkdownDocument;
+    }
+    async saveDocument(document: MarkdownDocument)
     {
         const documentRecord = JSON.stringify(document);
         console.log(documentRecord);
-        this.#cache.setValue(document.id, documentRecord);
+        await this.#cache.setValue(document.id, documentRecord);
     }
 
     async updateDocumentsMenu()
     {
-        const navigationItem = (this.#navItemTemplateContent.cloneNode(true) as HTMLElement).querySelector('*');
-        if(navigationItem == null) { return; }
+        const navigationItemDescription = (this.#navItemTemplateContent.cloneNode(true) as HTMLElement).querySelector('*');
+        if(navigationItemDescription == null) { return; }
+
+        const nav = this.findElement('nav');
+        nav.innerHTML = '';
 
         const values = (await this.#cache.getAllValues<string>()).filter(item => item != null);
         for(let i = 0; i < values.length; i++)
         {
-            console.log(values[i]);
-            const document = JSON.parse(values[i]) as MarkdownDocument;
-            
-            navigationItem.textContent = document.navigationItemLabel;
-            navigationItem.setAttribute('data-route', `doc/${document.id}`);
-            this.findElement('nav').append(navigationItem);
+            if(!values[i].startsWith('{')) { continue; }
+
+            const navigationItem = navigationItemDescription.cloneNode(true) as HTMLElement;
+            try
+            {
+                const document = JSON.parse(values[i]) as MarkdownDocument;
+                
+                navigationItem.textContent = document.navigationItemLabel;
+                navigationItem.setAttribute('data-route', `doc/${document.id}`);
+                nav.append(navigationItem);
+            }
+            catch(exception)
+            {
+                console.error(exception);
+            }
         }
 
+    }
+
+    toggleMarkdownGuide()
+    {
+        if(this.getAttribute('markdown-guide') == null)
+        {
+            this.openMarkdownGuide();
+        }
+        else
+        {
+            this.closeMarkdownGuide();
+        }
+    }
+    openMarkdownGuide()
+    {
+        this.toggleAttribute('markdown-guide', true);
+        this.part.add('markdown-guide');
+    }
+    closeMarkdownGuide()
+    {
+        this.toggleAttribute('markdown-guide', false);
+        this.part.remove('markdown-guide');
     }
 
     #boundClickHandler: (event: Event) => void = this.#onClick.bind(this);
@@ -159,15 +214,45 @@ export class DocsEditorElement extends HTMLElement
             this.openNewDocument();
             return;
         }
+        
+        const markdownGuideButton = composedPath.find(item => item instanceof HTMLButtonElement && item.id == 'markdown-guide-button');
+        if(markdownGuideButton != null)
+        {
+            this.toggleMarkdownGuide();
+            return;
+        }
+        const exportButton = composedPath.find(item => item instanceof HTMLButtonElement && item.id == 'export-button');
+        if(exportButton != null)
+        {
+            console.log('export');
+            // this.export();
+            return;
+        }
     }
     #boundPathChangeHandler: (event: Event|CustomEvent) => void = this.#onPathChange.bind(this);
     async #onPathChange(event: Event|CustomEvent)
     {
+        const customEvent = event as CustomEvent;
+        if(customEvent.detail.route == this.findElement('welcome'))
+        {
+            if(this.#isInitialized == true)
+            {
+                await this.closeDocument();
+                this.#cache.setValue(LAST_OPENED_PAGE_KEY, '');
+            }
+            return;
+        }
+        else if(customEvent.detail.route == this.findElement('help'))
+        {
+            await this.closeDocument();
+            this.#cache.setValue(LAST_OPENED_PAGE_KEY, 'help');
+            return;
+        }
+
         const documentId = (event.target as HTMLElement)?.getAttribute('path')?.substring(4);
         if(documentId == null || (event as CustomEvent).detail.route != this.findElement('document')) { return; }
-        const documentRecord = await this.#cache.getValue<string>(documentId);
-        if(documentRecord == null) { return; }
-        const document = JSON.parse(documentRecord);
+        const document = await this.getDocument(documentId);
+        if(document == null) { return }
         await this.openDocument(document);
     }
     #boundKeyUpHandler: (event: Event) => void = this.#onKeyUp.bind(this);
@@ -175,8 +260,7 @@ export class DocsEditorElement extends HTMLElement
     {
         if(this.currentDocument == null) { return; }
 
-        this.currentDocument.content = this.findElement('edit-content')!.textContent ?? "";
-        console.log(this.currentDocument.content);
+        this.currentDocument.content = this.findElement<HTMLTextAreaElement>('document-content')!.value ?? "";
         this.endTimeout();
         requestAnimationFrame(() =>
         {
